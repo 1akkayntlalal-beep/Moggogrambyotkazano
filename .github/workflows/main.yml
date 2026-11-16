@@ -1,15 +1,28 @@
 name: Build IPA
 on: [push]
-env:
-  HOMEBREW_NO_AUTO_UPDATE: 1
 jobs:
   build:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - run: brew install xcodegen && xcodegen generate
-      - run: xcodebuild -project Moggogrambyotkazano.xcodeproj -scheme Moggogrambyotkazano -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO
-      - run: mkdir -p Payload && cp -r build/Build/Products/Release-iphoneos/Moggogrambyotkazano.app Payload/ && zip -r Moggogrambyotkazano.ipa Payload
+      - name: Fast XcodeGen
+        run: |
+          curl -sL https://github.com -o xcodegen.zip
+          unzip -q xcodegen.zip
+          ./xcodegen/bin/xcodegen generate
+      - name: Build App
+        run: |
+          xcodebuild -project Moggogrambyotkazano.xcodeproj \
+            -scheme Moggogrambyotkazano \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Package IPA
+        run: |
+          mkdir -p Payload
+          cp -r build/Build/Products/Release-iphoneos/Moggogrambyotkazano.app Payload/
+          zip -r Moggogrambyotkazano.ipa Payload
       - uses: actions/upload-artifact@v4
         with:
           name: Moggogrambyotkazano-IPA
