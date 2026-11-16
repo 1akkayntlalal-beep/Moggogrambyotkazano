@@ -1,0 +1,25 @@
+workflows:
+  ios-ipa:
+    name: Build Moggogram IPA
+    instance_type: mac_mini_m2
+    scripts:
+      - name: Generate Xcode Project
+        script: |
+          curl -sL https://github.com -o xcodegen.zip
+          unzip -q xcodegen.zip
+          ./xcodegen/bin/xcodegen generate
+      - name: Build App
+        script: |
+          xcodebuild -project Moggogrambyotkazano.xcodeproj \
+            -scheme Moggogrambyotkazano \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Package IPA
+        script: |
+          mkdir -p Payload
+          cp -r build/Build/Products/Release-iphoneos/Moggogrambyotkazano.app Payload/
+          zip -r Moggogrambyotkazano.ipa Payload
+    artifacts:
+      - Moggogrambyotkazano.ipa
