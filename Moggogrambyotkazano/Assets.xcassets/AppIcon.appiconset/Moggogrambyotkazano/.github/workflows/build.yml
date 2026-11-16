@@ -1,0 +1,14 @@
+name: Build IPA
+on: [push]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install xcodegen && xcodegen generate
+      - run: xcodebuild -project Moggogrambyotkazano.xcodeproj -scheme Moggogrambyotkazano -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO
+      - run: mkdir -p Payload && cp -r build/Build/Products/Release-iphoneos/Moggogrambyotkazano.app Payload/ && zip -r Moggogrambyotkazano.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Moggogrambyotkazano-IPA
+          path: Moggogrambyotkazano.ipa
