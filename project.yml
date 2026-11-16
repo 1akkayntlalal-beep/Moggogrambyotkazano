@@ -13,4 +13,3 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: Moggogrambyotkazano
         GENERATE_INFOPLIST_FILE: YES
         CODE_SIGNING_ALLOWED: NO
-        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
