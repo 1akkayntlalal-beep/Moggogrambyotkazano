@@ -130,7 +130,8 @@ var body: some View {
 
                 if lots.isEmpty {
                     Text("На маркете пока пусто. Выстави свой NFT через /sell в боте!").foregroundStyle(.secondary).padding()
-                } else {ForEach(lots) { lot in
+                } else {
+                    ForEach(lots) { lot in
                         VStack(alignment: .leading, spacing: 6) {
                             Text("💎 \(lot.name) #\(lot.mint) (\(lot.rarity))").bold()
                             Text("🎨 \(lot.model) | 🖼 \(lot.backdrop)").font(.caption)
